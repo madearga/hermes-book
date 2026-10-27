@@ -505,6 +505,10 @@
     </tbody>
   </table></div>
   <p>Konsekuensi praktisnya: <b>konfigurasi sekali</b>. Skill yang dibuat di terminal langsung tersedia di Telegram, dan memori yang disimpan dari Discord muncul di aplikasi desktop, selama keduanya berjalan di <a href="#bab-01">profile yang sama</a>. Yang memang berbeda per permukaan hanya toolset yang diaktifkan (<code>hermes tools --summary</code>), setelan tampilan, dan petunjuk format per-platform yang Hermes sisipkan ke system prompt.</p>
+  <div class="embed">
+    <iframe src="components/peta-sistem.html" title="Peta sistem Hermes" loading="lazy"></iframe>
+    <div class="efoot"><span>Komponen interaktif: peta arsitektur — gunakan panel Route/Lens untuk menelusuri alur dan batas trust</span><a href="components/peta-sistem.html" target="_blank" rel="noopener">Buka penuh ↗</a></div>
+  </div>
 
   <h3>Apa yang terjadi dalam satu giliran</h3>
   <p>Satu "giliran" (turn) adalah segalanya antara pesan Anda dan balasan akhir agent. Biasanya itu beberapa panggilan model, bukan satu.</p>
@@ -1473,6 +1477,11 @@ hermes prompt-size --platform telegram                # pastikan penghematannya<
   <p>Dalam praktik, menambah MCP server dengan 40 tool berbiaya satu baris daftar per tool, bukan 40 skema penuh. Biarkan tool search menyala. Menyetel <code>tools.tool_search.defer: []</code> membuat semuanya langsung lagi, arah yang mahal.</p>
 
   <h3 id="tuas-2">Tuas 2: Jaga prompt cache tetap hangat</h3>
+  <p>Bayangkan sebagai gembok:</p>
+  <div class="embed">
+    <iframe src="components/kunci-cache.html" title="Figur isometrik: kunci prompt cache" loading="lazy"></iframe>
+    <div class="efoot"><span>Komponen interaktif: klik kunci cadangan (1–3) — hanya byte-identik yang mengangkat shackle</span><a href="components/kunci-cache.html" target="_blank" rel="noopener">Buka penuh ↗</a></div>
+  </div>
   <p>Caching adalah diskon tunggal terbesar yang tersedia, dan hanya bekerja saat awal request byte-identik dengan panggilan baru-baru ini.</p>
   <p><b>Cara kerjanya di Hermes.</b> Untuk model Claude di API Anthropic native, OpenRouter, atau Nous Portal, Hermes meletakkan cache breakpoint sendiri: di system prompt dan di pesan-pesan terbaru. Semua marker memakai satu TTL, <code>prompt_caching.cache_ttl</code>. Dokumen Hermes memperkirakan biaya input &plusmn;75% lebih rendah pada percakapan multi-giliran. Untuk penyedia lain yang meng-cache prefiks otomatis di sisinya, tugas Hermes hanya menjaga prefiks tetap stabil, dan desainnya melakukannya. System prompt dibekukan selama sesi, dan penulisan memori ke disk tanpa menyentuhnya.</p>
   <div class="codeblock"><span class="lang">yaml</span><pre><code>prompt_caching:
@@ -3106,6 +3115,10 @@ hermes cron create "every 15m" --no-agent --script disk-check.sh --name disk-wat
 hermes cron create "every 2h" "Summarize what changed on the pricing page in 3 bullets." \
   --monitor-url https://example.com/pricing --name pricing-watch --deliver telegram</code></pre></div>
   <p>Skrip hidup di <code>~/.hermes/scripts/</code>. Berkas berakhiran <code>.sh</code> atau <code>.bash</code> berjalan di bash, sisanya di Python milik Hermes. Skrip <b>tak mewarisi key penyedia Anda</b>. Jika satu butuh kredensial, namai di <code>terminal.env_passthrough</code> dan simpan nilainya di <code>.env</code>. Output monitor harus stabil: timestamp di dalamnya dihitung perubahan di tiap detakan.</p>
+  <div class="embed">
+    <iframe src="components/gerbang-cron.html" title="Diagram alur: gerbang cron hemat token" loading="lazy"></iframe>
+    <div class="efoot"><span>Komponen interaktif: jalur 0-token vs run agent — kapan Hermes benar-benar dibangunkan</span><a href="components/gerbang-cron.html" target="_blank" rel="noopener">Buka penuh ↗</a></div>
+  </div>
   <h4>Memori antar run</h4>
   <p>Job berulang mulai kosong tiap kali. Tiga cara membawa state:</p>
   <ul>
